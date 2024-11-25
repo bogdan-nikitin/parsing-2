@@ -37,29 +37,29 @@ public class LexicalAnalyzer {
         switch (curChar) {
             case '<':
                 nextChar();
-                curToken = new Token(TokenType.LANGLEBRACKET);
+                curToken = Token.LANGLEBRACKET;
                 break;
             case '>':
                 nextChar();
-                curToken = new Token(TokenType.RANGLEBRACKET);
+                curToken = Token.RANGLEBRACKET;
                 break;
             case ';':
                 nextChar();
-                curToken = new Token(TokenType.SEMICOLON);
+                curToken = Token.SEMICOLON;
                 break;
             case ':':
                 nextChar();
-                curToken = new Token(TokenType.COLON);
+                curToken = Token.COLON;
                 break;
             case -1:
-                curToken = new Token(TokenType.END);
+                curToken = Token.END;
                 break;
             default:
                 final String ident = parseIdent();
                 if (ident.equals(TokenType.VAR.toString())) {
-                    curToken = new Token(TokenType.VAR);
+                    curToken = Token.VAR;
                 } else if (ident.equals(TokenType.ARRAY.toString())) {
-                    curToken = new Token(TokenType.ARRAY);
+                    curToken = Token.ARRAY;
                 } else {
                     curToken = new Token(TokenType.IDENT, ident);
                 }
