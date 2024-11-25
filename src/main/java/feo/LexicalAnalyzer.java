@@ -71,14 +71,14 @@ public class LexicalAnalyzer {
     }
 
     private String parseIdent() throws ParseException {
-        if (!Character.isLetter(curChar)) {
+        if (!Character.isLetter(curChar) && curChar != '_') {
             illegalCharacter();
         }
         final StringBuilder stringBuilder = new StringBuilder();
         do {
             stringBuilder.appendCodePoint(curChar);
             nextChar();
-        } while (Character.isLetterOrDigit(curChar));
+        } while (Character.isLetterOrDigit(curChar) || curChar == '_');
         return stringBuilder.toString();
     }
 
