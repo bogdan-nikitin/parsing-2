@@ -6,18 +6,18 @@ import java.text.ParseException;
 
 
 public class LexicalAnalyzer {
-    InputStream is;
-    int curChar;
-    int curPos;
-    Token curToken;
+    private final InputStream is;
+    private int curChar;
+    private int curPos;
+    private Token curToken;
 
-    public LexicalAnalyzer(InputStream is) throws ParseException {
+    public LexicalAnalyzer(final InputStream is) throws ParseException {
         this.is = is;
         curPos = 0;
         nextChar();
     }
 
-    private boolean isBlank(int c) {
+    private boolean isBlank(final int c) {
         return c == ' ' || c == '\r' || c == '\n' || c == '\t';
     }
 
@@ -35,20 +35,47 @@ public class LexicalAnalyzer {
             nextChar();
         }
         switch (curChar) {
-            case '(':
+            case '<':
                 nextChar();
-                curToken = Token.LPAREN;
+                curToken = new Token(TokenType.LANGLEBRACKET);
                 break;
-            case ')':
+            case '>':
                 nextChar();
-                curToken = Token.RPAREN;
+                curToken = new Token(TokenType.RANGLEBRACKET);
                 break;
-            case 1:
-                curToken = Token.END;
+            case ';':
+                nextChar();
+                curToken = new Token(TokenType.SEMICOLON);
+                break;
+            case -1:
+                curToken = new Token(TokenType.END);
                 break;
             default:
-                throw new ParseException("Illegal character " + (char) curChar, curPos);
+                final String ident = parseIdent();
+                if (ident.equals("var")) {
+                    curToken = new Token(TokenType.VAR);
+                } else if (ident.equals("Array")) {
+                    curToken = new Token(TokenType.ARRAY);
+                } else {
+                    curToken = new Token(TokenType.IDENT, ident);
+                }
         }
+    }
+
+    private void illegalCharacter() throws ParseException {
+        throw new ParseException("Illegal character " + (char) curChar, curPos);
+    }
+
+    private String parseIdent() throws ParseException {
+        if (!Character.isLetter(curChar)) {
+            illegalCharacter();
+        }
+        final StringBuilder stringBuilder = new StringBuilder();
+        do {
+            stringBuilder.append(curChar);
+            nextChar();
+        } while (Character.isLetterOrDigit(curChar));
+        return stringBuilder.toString();
     }
 
     public Token curToken() {
