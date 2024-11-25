@@ -20,15 +20,15 @@ class LexicalAnalyzerTest {
         final List<Token> tokens = new ArrayList<>();
         while (true) {
             lex.nextToken();
-            if (lex.curToken().getTokenType() == TokenType.COLON) {
+            if (lex.curToken().getTokenType() == TokenType.END) {
                 return tokens;
             }
             tokens.add(lex.curToken());
         }
     }
 
-    void checkSequence(final String input, final TokenType ... types) throws ParseException {
-        Assertions.assertArrayEquals(tokens(input).toArray(), types);
+    void checkSequence(final String input, final Token ... tokens) throws ParseException {
+        Assertions.assertArrayEquals(tokens(input).toArray(), tokens);
     }
 
     @Test
