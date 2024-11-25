@@ -15,20 +15,16 @@ class LexicalAnalyzerTest {
         return new LexicalAnalyzer(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
 
-    List<Token> tokens(final String input) throws ParseException {
-        final LexicalAnalyzer lex = run(input);
-        final List<Token> tokens = new ArrayList<>();
-        while (true) {
-            lex.nextToken();
-            if (lex.curToken().getTokenType() == TokenType.END) {
-                return tokens;
-            }
-            tokens.add(lex.curToken());
-        }
-    }
-
     void checkSequence(final String input, final Token ... tokens) throws ParseException {
-        Assertions.assertArrayEquals(tokens(input).toArray(), tokens);
+        final LexicalAnalyzer lex = run(input);
+        final List<Token> tokenList = new ArrayList<>();
+        for (int i = 0; i < tokens.length; ++i) {
+            lex.nextToken();
+            tokenList.add(lex.curToken());
+        }
+        lex.nextToken();
+        Assertions.assertEquals(lex.curToken(), Token.END);
+        Assertions.assertArrayEquals(tokenList.toArray(), tokens);
     }
 
     @Test
