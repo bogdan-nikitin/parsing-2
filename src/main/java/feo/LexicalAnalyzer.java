@@ -47,14 +47,18 @@ public class LexicalAnalyzer {
                 nextChar();
                 curToken = new Token(TokenType.SEMICOLON);
                 break;
+            case ':':
+                nextChar();
+                curToken = new Token(TokenType.COLON);
+                break;
             case -1:
                 curToken = new Token(TokenType.END);
                 break;
             default:
                 final String ident = parseIdent();
-                if (ident.equals("var")) {
+                if (ident.equals(TokenType.VAR.toString())) {
                     curToken = new Token(TokenType.VAR);
-                } else if (ident.equals("Array")) {
+                } else if (ident.equals(TokenType.ARRAY.toString())) {
                     curToken = new Token(TokenType.ARRAY);
                 } else {
                     curToken = new Token(TokenType.IDENT, ident);

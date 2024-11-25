@@ -1,5 +1,22 @@
 package feo;
 
 public enum TokenType {
-    VAR, ARRAY, LANGLEBRACKET, RANGLEBRACKET, IDENT, END, SEMICOLON
+    VAR("var"),
+    ARRAY("Array"),
+    LANGLEBRACKET("<"),
+    RANGLEBRACKET(">"),
+    IDENT("identifier"),
+    END("end of file"),
+    COLON(":"),
+    SEMICOLON(";");
+
+    private final String toString;
+
+    TokenType(final String toString) {
+        this.toString = toString;
+    }
+
+    public String toString() {
+        return toString;
+    }
 }
