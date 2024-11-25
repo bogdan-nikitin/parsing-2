@@ -7,10 +7,18 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class LexicalAnalyzerTest {
+    final Token[] SIMPLE_TOKENS = {
+        Token.VAR,
+        Token.ARRAY,
+        Token.LANGLEBRACKET,
+        Token.RANGLEBRACKET,
+        Token.COLON,
+        Token.SEMICOLON
+    };
+
     LexicalAnalyzer run(final String input) throws ParseException {
         return new LexicalAnalyzer(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
@@ -30,5 +38,12 @@ class LexicalAnalyzerTest {
     @Test
     void testEmpty() throws ParseException {
         checkSequence("");
+    }
+
+    @Test
+    void testSimpleTokens() throws ParseException {
+        for (Token token : SIMPLE_TOKENS) {
+            checkSequence(token.getTokenType().toString(), token);
+        }
     }
 }

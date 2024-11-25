@@ -76,7 +76,7 @@ public class LexicalAnalyzer {
         }
         final StringBuilder stringBuilder = new StringBuilder();
         do {
-            stringBuilder.append(curChar);
+            stringBuilder.appendCodePoint(curChar);
             nextChar();
         } while (Character.isLetterOrDigit(curChar));
         return stringBuilder.toString();
