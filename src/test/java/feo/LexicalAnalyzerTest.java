@@ -50,9 +50,7 @@ class LexicalAnalyzerTest {
     }
 
     void checkException(final String input) {
-        Assertions.assertThrows(ParseException.class, () -> {
-           checkSequence(input);
-        });
+        Assertions.assertThrows(ParseException.class, () -> checkSequence(input));
     }
 
     @Test

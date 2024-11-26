@@ -18,9 +18,7 @@ class ParserTest {
     }
 
     void checkException(final String input) {
-        Assertions.assertThrows(ParseException.class, () -> {
-            parse(input);
-        });
+        Assertions.assertThrows(ParseException.class, () -> parse(input));
     }
 
     @Test
