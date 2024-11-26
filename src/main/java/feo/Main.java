@@ -7,8 +7,8 @@ public class Main {
         try {
             final ArrayDeclaration array = new Parser().parse(System.in);
             System.out.printf("digraph { ArrayDeclaration -> \"%s\" ArrayDeclaration -> \"%s\" }%n",
-                    array.getVariableName(),
-                    array.getElementType());
+                    array.variableName(),
+                    array.elementType());
         } catch (ParseException e) {
             System.err.println("During parsing an error occurred: " + e);
         }
