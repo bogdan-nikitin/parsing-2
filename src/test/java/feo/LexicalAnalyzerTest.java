@@ -1,6 +1,7 @@
 package feo;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -44,11 +45,13 @@ class LexicalAnalyzerTest {
     }
 
     @Test
+    @DisplayName("Empty input")
     void testEmpty() throws ParseException {
         checkSequence("");
     }
 
     @Test
+    @DisplayName("Input of one single token without value")
     void testSimpleTokens() throws ParseException {
         for (Token token : SIMPLE_TOKENS) {
             checkSequence(token.getTokenType().toString(), token);
@@ -56,6 +59,7 @@ class LexicalAnalyzerTest {
     }
 
     @Test
+    @DisplayName("Check identifier in many variants")
     void testIdent() throws ParseException {
         checkIdent("foobar");
         checkIdent("FooBar");
@@ -70,6 +74,7 @@ class LexicalAnalyzerTest {
     }
 
     @Test
+    @DisplayName("Check array declaration")
     void testValid() throws ParseException {
         checkSequence("var foobar42: Array<Int>",
                 Token.VAR, ident("foobar42"), Token.COLON, Token.ARRAY,
