@@ -24,16 +24,21 @@ class LexicalAnalyzerTest {
         return new LexicalAnalyzer(new ByteArrayInputStream(input.getBytes(StandardCharsets.UTF_8)));
     }
 
-    void checkSequence(final String input, final Token... tokens) throws ParseException {
+    List<Token> tokens(final String input) throws ParseException {
         final LexicalAnalyzer lex = run(input);
         final List<Token> tokenList = new ArrayList<>();
-        for (int i = 0; i < tokens.length; ++i) {
+        while (true) {
             lex.nextToken();
+            if (lex.curToken() == Token.END) {
+                break;
+            }
             tokenList.add(lex.curToken());
         }
-        lex.nextToken();
-        Assertions.assertEquals(lex.curToken(), Token.END);
-        Assertions.assertArrayEquals(tokenList.toArray(), tokens);
+        return tokenList;
+    }
+
+    void checkSequence(final String input, final Token... tokens) throws ParseException {
+        Assertions.assertArrayEquals(tokens(input).toArray(), tokens);
     }
 
     Token ident(final String value) {
@@ -42,6 +47,12 @@ class LexicalAnalyzerTest {
 
     void checkIdent(final String ident) throws ParseException {
         checkSequence(ident, ident(ident));
+    }
+
+    void checkException(final String input) {
+        Assertions.assertThrows(ParseException.class, () -> {
+           checkSequence(input);
+        });
     }
 
     @Test
@@ -74,11 +85,34 @@ class LexicalAnalyzerTest {
     }
 
     @Test
+    @DisplayName("Case of var and Array")
+    void testCase() throws ParseException {
+        checkIdent("Var");
+        checkIdent("vAr");
+        checkIdent("vaR");
+        checkIdent("VAR");
+        checkIdent("ArraY");
+        checkIdent("array");
+        checkIdent("ARRAY");
+    }
+
+    @Test
+    @DisplayName("Prefixes of var and Array to be an identifier")
+    void testPrefix() throws ParseException {
+        checkIdent("v");
+        checkIdent("va");
+        checkIdent("varfoo");
+        checkIdent("A");
+        checkIdent("Arra");
+        checkIdent("Arraybar");
+    }
+
+    @Test
     @DisplayName("Check array declaration")
     void testValid() throws ParseException {
-        checkSequence("var foobar42: Array<Int>",
+        checkSequence("var foobar42: Array<Int>;",
                 Token.VAR, ident("foobar42"), Token.COLON, Token.ARRAY,
-                Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET);
+                Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET, Token.SEMICOLON);
     }
 
     @Test
@@ -89,8 +123,24 @@ class LexicalAnalyzerTest {
         checkSequence("\n");
         checkSequence("\t");
         checkSequence("   \r   \n\t\n\n \r\r\t       \n\r");
-        checkSequence("   \r   \n\n\t  \r  var  \r\n \t foobar42   \n \r   \r\r  :\n \rArray\r<\tInt   >  \r  \n",
+        checkSequence("   \r   \n\n\t  \r  var  \r\n \t foobar42   \n \r   \r\r  :\n \rArray\r<\tInt   >  \r; \n",
                 Token.VAR, ident("foobar42"), Token.COLON, Token.ARRAY,
-                Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET);
+                Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET, Token.SEMICOLON);
+    }
+
+    @Test
+    @DisplayName("Identifier starting with number")
+    void testDigitFirstIdentifier() {
+        checkException("42foobar");
+        checkException("var 42foobar: Array<Int>;");
+        checkException("var foobar: Array<42Int>;");
+    }
+
+    @Test
+    @DisplayName("Invalid characters")
+    void testInvalidCharacters() {
+        checkException("var foobar: Array<Int+>;");
+        checkException("var$ foobar: Array<Int>;");
+        checkException("var foobar: Array<Int>;%");
     }
 }
