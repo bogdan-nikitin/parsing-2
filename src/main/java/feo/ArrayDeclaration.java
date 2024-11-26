@@ -18,4 +18,12 @@ public class ArrayDeclaration {
         }
         return false;
     }
+
+    public String getElementType() {
+        return elementType;
+    }
+
+    public String getVariableName() {
+        return variableName;
+    }
 }
