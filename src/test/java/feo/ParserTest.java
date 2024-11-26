@@ -27,6 +27,8 @@ class ParserTest {
     @DisplayName("Simple test for valid input")
     void testValid() throws ParseException {
         checkDeclaration("var foo: Array<Int>;", "foo", "Int");
+        checkDeclaration("var foo:Array<Z>;", "foo", "Z");
+        checkDeclaration("var bar : Array<kgeorgiy>;", "bar", "kgeorgiy");
     }
 
     @Test
@@ -54,5 +56,31 @@ class ParserTest {
         checkException("var foo: Array<>;");
         checkException("var foo: Array<Int;");
         checkException("var foo: Array<Int>");
+    }
+
+    @Test
+    @DisplayName("Array as element type")
+    void testArrayOfArrays() {
+        checkException("var array: Array<Array>;");
+    }
+
+    @Test
+    @DisplayName("Test repeating tokens")
+    void testRepeats() {
+        checkException("var var foo: Array<Int>;");
+        checkException("var foo bar: Array<Int>;");
+        checkException("var foo: : Array<Int>;");
+        checkException("var foo: Array Array<Int>;");
+        checkException("var foo: Array<<Int>;");
+        checkException("var foo: Array<Int>>;");
+        checkException("var foo: Array<Int>;;");
+    }
+
+    @Test
+    @DisplayName("Wrong brackets")
+    void testBrackets() {
+        checkException("var foo: Array>Int>;");
+        checkException("var foo: Array<Int<;");
+        checkException("var foo: Array>Int<;");
     }
 }

@@ -116,6 +116,15 @@ class LexicalAnalyzerTest {
     }
 
     @Test
+    @DisplayName("Check random valid tokens")
+    void testRandom() throws ParseException {
+        checkSequence("Array>foobar<;;:var",
+                Token.ARRAY, Token.RANGLEBRACKET, ident("foobar"), Token.LANGLEBRACKET,
+                Token.SEMICOLON, Token.SEMICOLON, Token.COLON, Token.VAR
+                );
+    }
+
+    @Test
     @DisplayName("Check blank characters")
     void testBlank() throws ParseException {
         checkSequence(" ");
