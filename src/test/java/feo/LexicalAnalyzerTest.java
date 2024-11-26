@@ -80,4 +80,17 @@ class LexicalAnalyzerTest {
                 Token.VAR, ident("foobar42"), Token.COLON, Token.ARRAY,
                 Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET);
     }
+
+    @Test
+    @DisplayName("Check blank characters")
+    void testBlank() throws ParseException {
+        checkSequence(" ");
+        checkSequence("\r");
+        checkSequence("\n");
+        checkSequence("\t");
+        checkSequence("   \r   \n\t\n\n \r\r\t       \n\r");
+        checkSequence("   \r   \n\n\t  \r  var  \r\n \t foobar42   \n \r   \r\r  :\n \rArray\r<\tInt   >  \r  \n",
+                Token.VAR, ident("foobar42"), Token.COLON, Token.ARRAY,
+                Token.LANGLEBRACKET, ident("Int"), Token.RANGLEBRACKET);
+    }
 }
