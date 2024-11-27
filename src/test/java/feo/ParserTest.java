@@ -14,7 +14,18 @@ class ParserTest {
     }
 
     void checkDeclaration(final String input, final String variableName, final String elementType) throws ParseException {
-        Assertions.assertEquals(parse(input), new ArrayDeclaration(variableName, new ElementType(elementType)));
+        checkDeclaration(input, variableName, elementType, 0);
+    }
+
+    void checkDeclaration(final String input,
+                          final String variableName,
+                          final String elementTypeIdentifier,
+                          final int depth) throws ParseException {
+        ElementType elementType = new ElementType(elementTypeIdentifier);
+        for (int i = 0; i < depth; ++i) {
+            elementType = new ElementType(elementType);
+        }
+        Assertions.assertEquals(parse(input), new ArrayDeclaration(variableName, elementType));
     }
 
     void checkException(final String input) {
@@ -57,12 +68,6 @@ class ParserTest {
     }
 
     @Test
-    @DisplayName("Array as element type")
-    void testArrayOfArrays() {
-        checkException("var array: Array<Array>;");
-    }
-
-    @Test
     @DisplayName("Test repeating tokens")
     void testRepeats() {
         checkException("var var foo: Array<Int>;");
@@ -80,5 +85,34 @@ class ParserTest {
         checkException("var foo: Array>Int>;");
         checkException("var foo: Array<Int<;");
         checkException("var foo: Array>Int<;");
+    }
+
+    @Test
+    @DisplayName("Not an identifier as element type")
+    void testWrongElementType() {
+        checkException("var foo: Array<var>;");
+        checkException("var foo: Array<:>;");
+    }
+
+    @Test
+    @DisplayName("Check nested arrays")
+    void testNested() throws ParseException {
+        checkDeclaration("var foo: Array<Array<Bar>>;", "foo", "Bar", 1);
+        checkDeclaration("var foo: Array<Array<Array_>>;",
+                "foo", "Array_", 1);
+        checkDeclaration("var foo: Array<Array<Array<Array<Bar>>>>;",
+                "foo", "Bar", 3);
+    }
+
+    @Test
+    @DisplayName("Check invalid nested arrays")
+    void testInvalidNested() {
+        checkException("var foo: Array<Array>;");
+        checkException("var foo: Array<<Array<Int>>>;");
+        checkException("var foo: Array<Array<Int>;>;");
+        checkException("var foo: Array<Array<Array<Int>>;");
+        checkException("var foo: Array<Array<Array<Int>>>>;");
+        checkException("var foo: Array<Array<Int<Array<Int>>>>;");
+        checkException("var foo: Array<<Int>>;");
     }
 }
