@@ -20,14 +20,12 @@ public class DisplayArrayDeclaration {
             g.drawImage(image, 0, 0, null);
         }
     }
-    private static final int HEIGHT = 500;
-    private static final int PADDING = 50;
+    private static final int PADDING = 40;
 
     public static Frame display(final ArrayDeclaration arrayDeclaration) {
         Graphviz.noHeadless();
         final Image image = Graphviz
                 .fromGraph(new GraphBuilder().build(arrayDeclaration))
-                .height(HEIGHT)
                 .render(Format.PNG)
                 .toImage();
         JFrame f = new JFrame();
