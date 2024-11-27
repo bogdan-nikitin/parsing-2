@@ -9,7 +9,7 @@ public class Main {
             System.out.printf("digraph { ArrayDeclaration -> \"%s\" ArrayDeclaration -> \"%s\" }%n",
                     array.variableName(),
                     array.elementType());
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             System.err.println("During parsing an error occurred: " + e);
         }
     }
