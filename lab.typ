@@ -34,6 +34,23 @@ $ S -> "var" "Ident"":" "Array" "<" "Ident" ">" $
     [Описание массива в Kotlin],
 )
 
+*#text(red)[Модификация]*
+
+$ S -> "var" "Ident"":" "Array" "<" T ">" $
+$ T -> "Array" "<" T ">" $
+$ T -> "Ident" $
+
+#table(
+    columns: (auto, auto),
+    table.header(
+    [*Нетерминал*], [*Описание*],
+    ),
+    $S$,
+    [Описание массива в Kotlin],
+    $T$,
+    [Тип элементов массива]
+)
+
 = Построение лексического анализатора
 
 В нашей грамматике есть нетерминалы 'var', 'Ident', 'Array', '<', '>', ':', ';'.
@@ -241,7 +258,6 @@ public class LexicalAnalyzer {
     [var],
     [\$]
 )
-
 Заведем структуру данных для хранения результата.
 
 ```java
@@ -288,6 +304,21 @@ public class Parser {
     }
 }
 ```
+
+*#text(red)[Модификация]*
+
+#table(
+    columns: (auto, auto, auto),
+    table.header(
+    [*Нетерминал*], [FIRST], [FOLLOW],
+    ),
+    $S$,
+    [var],
+    [\$],
+    $T$,
+    [Array, Ident],
+    [>]
+)
 
 = Визуализация дерева разбора
 

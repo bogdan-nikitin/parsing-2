@@ -14,7 +14,7 @@ class ParserTest {
     }
 
     void checkDeclaration(final String input, final String variableName, final String elementType) throws ParseException {
-        Assertions.assertEquals(parse(input), new ArrayDeclaration(variableName, elementType));
+        Assertions.assertEquals(parse(input), new ArrayDeclaration(variableName, new ElementType(elementType)));
     }
 
     void checkException(final String input) {

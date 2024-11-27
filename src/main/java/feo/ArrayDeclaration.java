@@ -1,3 +1,3 @@
 package feo;
 
-public record ArrayDeclaration(String variableName, String elementType) {}
+public record ArrayDeclaration(String variableName, ElementType elementType) {}
