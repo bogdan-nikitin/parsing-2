@@ -13,18 +13,31 @@ public class GraphBuilder {
 
     public Graph build(final ArrayDeclaration arrayDeclaration) {
         return graph().directed().with(
-                nextNode("ArrayDeclaration")
-                        .link(nextNode(arrayDeclaration.variableName()))
+                nextNode("S")
+                        .link(nextNode("var"))
+                        .link(ident(arrayDeclaration.variableName()))
+                        .link(nextNode(":"))
+                        .link(nextNode("Array"))
+                        .link(nextNode("<"))
                         .link(build(arrayDeclaration.elementType()))
+                        .link(nextNode(">"))
+                        .link(nextNode(";"))
         );
+    }
+    private Node ident(final String identifier) {
+        return nextNode("Ident " + identifier);
     }
 
     public Node build(final ElementType elementType) {
         final String identifier = elementType.getIdentifier();
         if (identifier != null) {
-            return nextNode(identifier);
+            return ident(identifier);
         }
-        return nextNode("Array").link(build(elementType.getChild()));
+        return nextNode("T")
+                .link(nextNode("Array"))
+                .link(nextNode("<"))
+                .link(build(elementType.getChild()))
+                .link(nextNode(">"));
     }
 
     private Node nextNode(final String name) {
